@@ -1,7 +1,7 @@
 # F2+F3 Companion — contexto para agentes
 
 Mod de Fabric (solo cliente) para Minecraft que acompaña a la app de escritorio **F2+F3** (repo aparte, en
-`../craftshot`, github.com/MguevaraJ/f2f3): guarda junto a cada captura (F2) los datos exactos del juego y lleva la app dentro del juego (galería,
+`../f2f3`, github.com/MguevaraJ/f2f3): guarda junto a cada captura (F2) los datos exactos del juego y lleva la app dentro del juego (galería,
 guía, builds, planes del mapa, lista de materiales). **Textos del juego en español. Código y comentarios en inglés.**
 
 Tres proyectos Gradle independientes con el mismo código: `fabric-26.3/` (el original), `fabric-1.21.1/` y
@@ -10,26 +10,27 @@ Tres proyectos Gradle independientes con el mismo código: `fabric-26.3/` (el or
 
 ## Comandos
 ```bash
-cd fabric-26.3 && ./gradlew build -q        # jar en build/libs/craftshot-companion-1.0.0+<versión>.jar
+cd fabric-26.3 && ./gradlew build -q        # jar en build/libs/f2f3-companion-1.0.0+<versión>.jar
 ./gradlew runClient --args='--quickPlaySingleplayer "New World (1)"'    # 26.3; en los ports el mundo es "Mundo nuevo"
 ```
-La app incluye los jars: desde `../craftshot`, `npm run build:mod` compila los tres y los copia a su `resources/`
+La app incluye los jars: desde `../f2f3`, `npm run build:mod` compila los tres y los copia a su `resources/`
 (con los clientes de prueba CERRADOS). Los fixtures reales de sidecars y `.nbt` viven en los tests de la app
 (`tests/fixtures/companion/`): si cambia lo que escribe el mod, regenerarlos allí.
 Commits: autor "Moises Guevara <mguevaraj27@gmail.com>", terminar con `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-**Se conservan a propósito** los identificadores internos "craftshot" (id del mod `craftshot_companion`, paquete Java,
-sufijos `.craftshot.json` / `.craftshot.nbt`, carpeta `craftshot/`, espacio `craftshot:` de las plantillas): la app
-depende de ellos.
+Identificadores (la app depende de ellos; antes eran "craftshot"): id del mod `f2f3_companion`, paquete
+`dev.mguevara.f2f3.companion`, sufijos `.f2f3.json` / `.f2f3.nbt`, carpeta `f2f3/` del juego, espacio `f2f3:` de las
+plantillas. Compatibilidad que no hay que quitar: `CaptureIndex` también lee `.craftshot.json` / `.craftshot.nbt` y
+`CompanionConfig` migra `config/craftshot_companion.json`.
 
 ## El mod (26.3 es la referencia)
 Gradle 9.7.1 con wrapper, plugin `net.fabricmc.fabric-loom` 1.18-SNAPSHOT, Java release 25 (JDK 26 y 21 instalados),
 loader 0.19.5. **Sin dependencia de fabric-api: todos los ganchos son mixins.** Entrypoint
-`dev.mguevara.craftshot.companion.CraftshotCompanion`, mixins en `craftshot_companion.mixins.json`.
+`dev.mguevara.f2f3.companion.F2F3Companion`, mixins en `f2f3_companion.mixins.json`.
 Tras cambiarlo: `npm run build:mod`; el usuario lo reinstala desde Ajustes › "Guardar el mod".
 
 ### Contrato JSON del sidecar (schema 1) — mantenerlo estable, es la API entre mod y app
 ```json
-{ "format": "craftshot-companion", "schema": 1,
+{ "format": "f2f3-companion", "schema": 1,
   "mod": { "name": "F2+F3 Companion", "version": "1.0.0+26.3", "loader": "fabric", "minecraft": "26.3" },
   "capturedAt": "2026-09-29T15:32:10.123Z",
   "world": { "type": "singleplayer|multiplayer|realms", "name": "…", "seed": "123", "dimension": "minecraft:overworld",
@@ -40,7 +41,7 @@ Tras cambiarlo: `npm run build:mod`; el usuario lo reinstala desde Ajustes › "
   "target": { "block": {"id":"minecraft:stone","pos":{…}}, "entity": {"id":"minecraft:zombie","distance":3.2} },
   "entities": [ {"id":"minecraft:cow","count":3,"nearest":12.5} ],
   "structures": { "inside": ["minecraft:village_plains"], "target": [] },
-  "build": { "file": "….craftshot.nbt", "origin": {…}, "size": {…}, "blocks": 173, "entities": 0, "template": "craftshot:casa" } }
+  "build": { "file": "….f2f3.nbt", "origin": {…}, "size": {…}, "blocks": 173, "entities": 0, "template": "f2f3:casa" } }
 ```
 `seed` solo en un jugador y **como string**; `structures` ausente = desconocido (multijugador). `entities` = seres vivos
 visibles (dentro del campo de visión y con línea de visión, ≤96 bloques). Más los campos opcionales de la fase 3.
@@ -48,7 +49,7 @@ visibles (dentro del campo de visión y con línea de visión, ≤96 bloques). M
 ### Clases
 - `SnapshotCollector` / `CaptureSnapshot` / `ServerCollector` (hilo del servidor) / `SidecarWriter` (cola FIFO; escribe
   el `.nbt` antes del JSON, en `Util.ioPool()`, tmp + move atómico).
-- `CompanionConfig` — `config/craftshot_companion.json`: `build` "sneak" | "always" | "never"; `buildSize` (16, 3–97;
+- `CompanionConfig` — `config/f2f3_companion.json`: `build` "sneak" | "always" | "never"; `buildSize` (16, 3–97;
   `buildRadius` antiguo = 2r+1); `buildBase` "corner" | "center"; `galleryKey` ("f6"); `guideKey` ("h"); `plansKey` ("j"); `materialsKey` ("m"). Las teclas son
   el nombre tras `key.keyboard.`; se detectan en el mixin de `KeyboardHandler` (sin KeyMapping, no salen en Controles).
 - `BuildRegion.corner(level, target, depth, width, facing, height)`: el bloque apuntado es la esquina inferior cercana
@@ -59,8 +60,8 @@ visibles (dentro del campo de visión y con línea de visión, ≤96 bloques). M
   `_2`…), captura retrasada 2 ticks. En los pasos 1 y 2 la caja se dibuja de 1 bloque de alto. Enter fija/suelta, Esc
   retrocede un paso o cancela (sin abrir el menú de pausa); abrir chat o inventario cancela. Rayo propio de 96 bloques
   (`player.pick`). Texto con `drawLines` (ajustado al ancho con `font.split`) desde el mixin del HUD.
-  El build se guarda también en el mundo: `getStructureTemplateManager().getOrCreate(craftshot:<nombre>)` + `save(id)`
-  (`generated/craftshot/structure/`, singular), y el chat da "[Copiar comando]".
+  El build se guarda también en el mundo: `getStructureTemplateManager().getOrCreate(f2f3:<nombre>)` + `save(id)`
+  (`generated/f2f3/structure/`, singular), y el chat da "[Copiar comando]".
 - `GalleryScreen` (**F6**): cuadrícula + panel (imagen al 60 %, datos en un recuadro oscuro con barra de scroll,
   botones de 16 px en dos columnas: "Guiarme", "Copiar XYZ", "Colocar build", "Materiales", "Deshacer", con tooltips). Filtro "Solo
   este mundo" / "Todos los mundos". `CaptureIndex` recorre `screenshots/` (4 niveles) fuera del hilo cliente: usa el
@@ -70,7 +71,7 @@ visibles (dentro del campo de visión y con línea de visión, ≤96 bloques). M
   punto (`Gizmos.point`, a 48 bloques como mucho en esa dirección: los gizmos lejanos no se dibujan); a ≤24 bloques,
   además el bloque y una línea desde los pies. **H** oculta/muestra. Se borra al llegar (≤3 bloques en horizontal y ≤12
   de altura) o al salir del mundo. Entre Overworld y Nether apunta a las coordenadas equivalentes (no probado en juego).
-- `Plans`: lee `craftshot/plans.json` (lo relee cada 40 ticks si cambió, fuera del hilo cliente) y dibuja el plan del
+- `Plans`: lee `f2f3/plans.json` (lo relee cada 40 ticks si cambió, fuera del hilo cliente) y dibuja el plan del
   mundo actual (mismo nombre que usa la galería): punto AFK, esferas de 24 y 128 (tres círculos máximos + el corte a la
   altura de los pies, más grueso), cuadrados de simulación y de solo bloques, granjas con su color, portales A/B y el
   cuadrado de búsqueda. **J** oculta/muestra los planes; **Mayús+J** los chunks slime (±4 chunks, solo Overworld;
@@ -81,7 +82,7 @@ visibles (dentro del campo de visión y con línea de visión, ≤96 bloques). M
   (bloque → `asItem()`; sin ítem se ignora; losa doble = 2; mitad superior de puertas/plantas y cabecera de cama = 0),
   recuenta el inventario cada 5 ticks, pendientes arriba y completos en verde, máx. 10 filas ("+N más"), aviso al
   tenerlo todo. **M** oculta/muestra. No mira dentro de shulkers ni bundles. Probado en juego.
-- `BuildPlacer` (solo un jugador): carga el `.craftshot.nbt` (`StructureTemplate.load(BuiltInRegistries.BLOCK, tag)`),
+- `BuildPlacer` (solo un jugador): carga el `.f2f3.nbt` (`StructureTemplate.load(BuiltInRegistries.BLOCK, tag)`),
   caja naranja con la misma convención de esquina, girada por cuartos según hacia dónde mira el jugador ahora frente a
   la captura. Enter coloca en el hilo del servidor con `placeInWorld` (no usa `/place`: funciona sin trucos); rueda
   agachado sube/baja; Esc cancela. Ancla por rotación: 90° → min+(sz−1,0,0); 180° → min+(sx−1,0,sz−1); 270° →
@@ -105,8 +106,8 @@ F2 = `Screenshot.grab(File, RenderTarget, Consumer)`, NBT clásico (`getList(k, 
 (`./gradlew runClient --args='--quickPlaySingleplayer "Mundo nuevo"'`); javap contra el jar con nombres:
 `~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged/1.21.1-*/…jar`.
 App: `shared/modVersions.ts` (`MOD_VERSIONS`), `components/SaveModButton.tsx` (selector de versión + botón, en
-Ajustes y onboarding), `companion.saveMod(version)`, jars `resources/craftshot-companion.jar` (26.3) y
-`craftshot-companion-<versión>.jar`. Fixtures `tests/fixtures/companion/build-1.21.1.*` y `build-1.20.1.*`.
+Ajustes y onboarding), `companion.saveMod(version)`, jars `resources/f2f3-companion.jar` (26.3) y
+`f2f3-companion-<versión>.jar`. Fixtures `tests/fixtures/companion/build-1.21.1.*` y `build-1.20.1.*`.
 
 ### Port a 1.20.1 (`fabric-1.20.1/`, probado en juego igual que el de 1.21.1)
 Copia del de 1.21.1 con Java 17. Diferencias: `Gui.render(GuiGraphics, float)`, `LevelRenderer.renderLevel(PoseStack,
@@ -115,7 +116,7 @@ con escala X negativa (la rotación de cámara mira al revés antes de 1.21), `S
 llama `render` (BuildNameScreen pinta su panel a mano), `mouseScrolled` de 3 argumentos, `new ResourceLocation`,
 `NbtIo` con `File`, sin `/tick` (tick fijo 20 / "normal", `getAverageTickTime`), `mc.player.getServerBrand()`,
 `mc.isConnectedToRealms()`, encantamientos con `EnchantmentHelper.getEnchantments`, builds del mundo en
-`generated/craftshot/structures/` (plural). La app elige `structure` o `structures` al instalar una plantilla según
+`generated/f2f3/structures/` (plural). La app elige `structure` o `structures` al instalar una plantilla según
 el `DataVersion` del `level.dat` (< 3953 = anterior a 1.21). Mundo de prueba: `Mundo nuevo`.
 
 ### APIs de 26.3 (sin ofuscar; verificar con `javap -p -cp ~/.minecraft/versions/26.3/26.3.jar <clase>`)

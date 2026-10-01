@@ -31,5 +31,5 @@ java {
 }
 
 jar {
-	from('LICENSE') { rename { "${it}_craftshot_companion" } }
+	from('LICENSE') { rename { "${it}_f2f3_companion" } }
 }

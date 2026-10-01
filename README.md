@@ -6,11 +6,11 @@ parte de la app dentro del juego.
 
 ## Qué hace
 
-- **Datos exactos de cada captura**: junto a cada `.png` escribe un `.craftshot.json` con coordenadas, dimensión,
+- **Datos exactos de cada captura**: junto a cada `.png` escribe un `.f2f3.json` con coordenadas, dimensión,
   bioma, luz, bloque y entidad apuntados, mobs visibles, estructuras, reglas del juego, mob caps y más. Sin depender
   del F3 ni de reconocer la imagen.
 - **Builds** (`Mayús+F2`): selecciona una construcción en tres pasos (fondo, ancho, altura), ponle nombre y se guarda
-  como estructura vanilla (`.nbt`) junto a la captura y en el mundo (`/place template craftshot:<nombre>`).
+  como estructura vanilla (`.nbt`) junto a la captura y en el mundo (`/place template f2f3:<nombre>`).
 - **Galería dentro del juego** (`F6`): tus capturas con todo lo que se sabe de ellas. Desde ahí:
   - **Guiarme**: una flecha en el HUD te lleva al lugar de la captura (`H` la oculta).
   - **Colocar build**: una caja naranja muestra dónde quedará; `Enter` lo coloca y se puede deshacer.
@@ -34,7 +34,7 @@ las otras dos son ports con una pequeña capa de compatibilidad (`compat/`).
 
 ```bash
 cd fabric-26.3        # o fabric-1.21.1, fabric-1.20.1
-./gradlew build       # → build/libs/craftshot-companion-1.0.0+<versión>.jar
+./gradlew build       # → build/libs/f2f3-companion-1.0.0+<versión>.jar
 ./gradlew runClient   # cliente de prueba
 ```
 
@@ -42,7 +42,7 @@ Copia el `.jar` en la carpeta `mods/` de un perfil de Fabric de esa versión.
 
 ## Configuración
 
-`config/craftshot_companion.json` (se crea solo): cuándo guardar builds (`build`: `sneak` / `always` / `never`), tamaño
+`config/f2f3_companion.json` (se crea solo): cuándo guardar builds (`build`: `sneak` / `always` / `never`), tamaño
 inicial de la caja (`buildSize`) y las teclas (`galleryKey`, `guideKey`, `plansKey`, `materialsKey`).
 
 ## Licencia
