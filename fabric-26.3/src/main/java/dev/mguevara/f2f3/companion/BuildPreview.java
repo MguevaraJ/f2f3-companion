@@ -72,7 +72,7 @@ public final class BuildPreview {
 		if (naming) return true;
 		if (active) {
 			if (region == null) {
-				message(mc, "Apunta a la base del build para guardarlo (Esc cancela)");
+				message(mc, Tr.t("Apunta a la base del build para guardarlo (Esc cancela)"));
 				return true;
 			}
 			if (step == 1) {
@@ -157,7 +157,7 @@ public final class BuildPreview {
 			return true;
 		}
 		active = false;
-		message(mc, "Guardado del build cancelado");
+		message(mc, Tr.t("Guardado del build cancelado"));
 		return true;
 	}
 
@@ -165,7 +165,7 @@ public final class BuildPreview {
 	public static boolean onLockKey(Minecraft mc) {
 		if (!active || mc.gui.screen() != null) return false;
 		if (!locked && region == null) {
-			message(mc, "Apunta a la base del build para fijar la caja");
+			message(mc, Tr.t("Apunta a la base del build para fijar la caja"));
 			return true;
 		}
 		locked = !locked;
@@ -194,7 +194,7 @@ public final class BuildPreview {
 			} finally {
 				capturing = false;
 			}
-			if (saved != null) message(mc, "Build guardado: " + saved.sizeText() + " · " + saved.blocks() + " bloques");
+			if (saved != null) message(mc, Tr.t("Build guardado: ") + saved.sizeText() + " · " + saved.blocks() + Tr.t(" bloques"));
 			return;
 		}
 		if (naming) {
@@ -209,7 +209,7 @@ public final class BuildPreview {
 		if (!active) return;
 		if (mc.player == null || mc.level == null || mc.gui.screen() != null) {
 			active = false;
-			if (mc.player != null) message(mc, "Guardado del build cancelado");
+			if (mc.player != null) message(mc, Tr.t("Guardado del build cancelado"));
 			return;
 		}
 		// Our own ray, much longer than the hand's reach: the build is framed from outside.
@@ -240,19 +240,19 @@ public final class BuildPreview {
 		}
 		if (aimed != null) Gizmos.cuboid(aimed, TARGET).setAlwaysOnTop();
 		// Shown by drawHud: the action bar is a single line and cut the text on narrow windows.
-		String pin = "Enter " + (locked ? "suelta" : "fija");
+		String pin = "Enter " + (locked ? Tr.t("suelta") : Tr.t("fija"));
 		if (region == null) {
-			hudStatus = "Apunta a la base del build";
-			hudControls = "Esc cancela";
+			hudStatus = Tr.t("Apunta a la base del build");
+			hudControls = Tr.t("Esc cancela");
 		} else if (step == 1) {
-			hudStatus = "Paso 1 de 3: el fondo · " + (locked ? "FIJADA · " : "") + depth + " hacia el fondo × " + width + " a la izquierda";
-			hudControls = "Rueda agachado: fondo (" + depth + ") · F2 siguiente · " + pin + " · Esc cancela";
+			hudStatus = Tr.t("Paso 1 de 3: el fondo · ") + (locked ? Tr.t("FIJADA · ") : "") + depth + Tr.t(" hacia el fondo × ") + width + Tr.t(" a la izquierda");
+			hudControls = Tr.t("Rueda agachado: fondo (") + depth + Tr.t(") · F2 siguiente · ") + pin + Tr.t(" · Esc cancela");
 		} else if (step == 2) {
-			hudStatus = "Paso 2 de 3: el ancho · " + (locked ? "" : "SUELTA · ") + depth + " hacia el fondo × " + width + " a la izquierda";
-			hudControls = "Rueda agachado: ancho (" + width + ") · F2 siguiente · " + pin + " · Esc vuelve al fondo";
+			hudStatus = Tr.t("Paso 2 de 3: el ancho · ") + (locked ? "" : Tr.t("SUELTA · ")) + depth + Tr.t(" hacia el fondo × ") + width + Tr.t(" a la izquierda");
+			hudControls = Tr.t("Rueda agachado: ancho (") + width + Tr.t(") · F2 siguiente · ") + pin + Tr.t(" · Esc vuelve al fondo");
 		} else {
-			hudStatus = "Paso 3 de 3: la altura · Build " + region.sizeText() + " · " + region.blocks() + " bloques";
-			hudControls = "Rueda agachado: altura (" + height + ") · F2 guardar · " + pin + " · Esc vuelve al ancho";
+			hudStatus = Tr.t("Paso 3 de 3: la altura · Build ") + region.sizeText() + " · " + region.blocks() + Tr.t(" bloques");
+			hudControls = Tr.t("Rueda agachado: altura (") + height + Tr.t(") · F2 guardar · ") + pin + Tr.t(" · Esc vuelve al ancho");
 		}
 		age++;
 	}
@@ -266,13 +266,13 @@ public final class BuildPreview {
 		if (mc.player == null) return;
 		String command = "/place template " + b.template()
 			+ " " + rel(b.origin().getX() - player.x()) + " " + rel(b.origin().getY() - player.y()) + " " + rel(b.origin().getZ() - player.z());
-		Component copy = Component.literal("[Copiar comando]").withStyle(style -> style
+		Component copy = Component.literal(Tr.t("[Copiar comando]")).withStyle(style -> style
 			.withColor(ChatFormatting.GREEN)
 			.withUnderlined(true)
 			.withClickEvent(new ClickEvent.CopyToClipboard(command))
 			.withHoverEvent(new HoverEvent.ShowText(Component.literal(command
-				+ "\nEjecútalo mirando al " + facingName(facing) + " y el build aparecerá en el mismo sitio respecto a ti."))));
-		mc.player.sendSystemMessage(Component.literal("Build guardado en el mundo como ")
+				+ Tr.t("\nEjecútalo mirando al ") + facingName(facing) + Tr.t(" y el build aparecerá en el mismo sitio respecto a ti.")))));
+		mc.player.sendSystemMessage(Component.literal(Tr.t("Build guardado en el mundo como "))
 			.append(Component.literal(b.template()).withStyle(ChatFormatting.YELLOW))
 			.append(" (" + b.size().getX() + "×" + b.size().getY() + "×" + b.size().getZ() + ") ")
 			.append(copy));
@@ -284,10 +284,10 @@ public final class BuildPreview {
 
 	private static String facingName(String facing) {
 		return switch (facing) {
-			case "north" -> "norte";
-			case "south" -> "sur";
-			case "east" -> "este";
-			case "west" -> "oeste";
+			case "north" -> Tr.t("norte");
+			case "south" -> Tr.t("sur");
+			case "east" -> Tr.t("este");
+			case "west" -> Tr.t("oeste");
 			default -> facing;
 		};
 	}

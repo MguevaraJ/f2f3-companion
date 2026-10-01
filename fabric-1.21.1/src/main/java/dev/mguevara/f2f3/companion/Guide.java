@@ -40,7 +40,7 @@ public final class Guide {
 		capture = c;
 		hidden = false;
 		String key = CompanionConfig.get().guideKey().toUpperCase();
-		if (mc.player != null) mc.player.displayClientMessage(Component.literal("Guía activada: sigue la flecha (" + key + " la oculta)"), true);
+		if (mc.player != null) mc.player.displayClientMessage(Component.literal(Tr.t("Guía activada: sigue la flecha (") + key + Tr.t(" la oculta)")), true);
 	}
 
 	public static void clear() {
@@ -51,7 +51,7 @@ public final class Guide {
 	public static boolean toggle(Minecraft mc) {
 		if (capture == null) return false;
 		hidden = !hidden;
-		if (mc.player != null) mc.player.displayClientMessage(Component.literal(hidden ? "Guía oculta" : "Guía visible"), true);
+		if (mc.player != null) mc.player.displayClientMessage(Component.literal(hidden ? Tr.t("Guía oculta") : Tr.t("Guía visible")), true);
 		return true;
 	}
 
@@ -93,7 +93,7 @@ public final class Guide {
 		boolean here = sameDimension(mc);
 		if (here && flat <= ARRIVED && Math.abs(goal.y - me.y) <= ARRIVED_HEIGHT) {
 			capture = null;
-			mc.player.displayClientMessage(Component.literal("Has llegado al lugar de la captura"), true);
+			mc.player.displayClientMessage(Component.literal(Tr.t("Has llegado al lugar de la captura")), true);
 			return;
 		}
 		if (hidden) return;
@@ -125,10 +125,10 @@ public final class Guide {
 
 	private static void hud(GuiGraphicsExtractor g, Minecraft mc, Font font, int cx) {
 		Vec3 goal = goal(mc);
-		String place = sameDimension(mc) ? "" : " · en " + CaptureIndex.dimensionName(capture.dimension());
+		String place = sameDimension(mc) ? "" : Tr.t(" · en ") + CaptureIndex.dimensionName(capture.dimension());
 		if (goal == null) {
-			centred(g, font, "Captura" + place, cx, 8, COLOR);
-			centred(g, font, "Ve a esa dimensión para seguir la guía", cx, 19, 0xFFFFFFFF);
+			centred(g, font, Tr.t("Captura") + place, cx, 8, COLOR);
+			centred(g, font, Tr.t("Ve a esa dimensión para seguir la guía"), cx, 19, 0xFFFFFFFF);
 			return;
 		}
 		Vec3 me = mc.player.position();
@@ -144,12 +144,12 @@ public final class Guide {
 		arrow(g, COLOR, 0);
 		g.pose().popMatrix();
 
-		String text = flat + " bloques" + place;
+		String text = flat + Tr.t(" bloques") + place;
 		if (sameDimension(mc)) {
 			int dy = (int) Math.round(capture.pos().getY() - me.y);
-			if (Math.abs(dy) >= 4) text += dy > 0 ? " · sube " + dy : " · baja " + -dy;
+			if (Math.abs(dy) >= 4) text += dy > 0 ? Tr.t(" · sube ") + dy : Tr.t(" · baja ") + -dy;
 		} else {
-			text += " · portal en " + (int) Math.floor(goal.x) + " " + (int) Math.floor(goal.z);
+			text += Tr.t(" · portal en ") + (int) Math.floor(goal.x) + " " + (int) Math.floor(goal.z);
 		}
 		centred(g, font, text, cx, 31, 0xFFFFFFFF);
 	}

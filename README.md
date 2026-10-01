@@ -19,6 +19,8 @@ parte de la app dentro del juego.
 - **Planes del mapa en el mundo** (`J`): el punto AFK con sus esferas de 24 y 128 bloques, los cuadrados de
   simulación, las granjas y el enlace de portales que planificaste en la app. `Mayús+J` muestra los chunks slime.
 
+El mod sigue el idioma del juego: en español si Minecraft está en español, en inglés en cualquier otro idioma.
+
 ## Versiones
 
 | Minecraft | Carpeta          | Java |
@@ -34,7 +36,7 @@ las otras dos son ports con una pequeña capa de compatibilidad (`compat/`).
 
 ```bash
 cd fabric-26.3        # o fabric-1.21.1, fabric-1.20.1
-./gradlew build       # → build/libs/f2f3-companion-1.0.0+<versión>.jar
+./gradlew build       # → build/libs/f2f3-companion-<versión del mod>+<Minecraft>.jar
 ./gradlew runClient   # cliente de prueba
 ```
 

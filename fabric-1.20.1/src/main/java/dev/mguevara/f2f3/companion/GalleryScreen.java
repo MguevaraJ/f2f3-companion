@@ -78,12 +78,12 @@ public final class GalleryScreen extends Screen {
 
 		int x = panelX + 4, w = panelWidth - 8, y = 0;
 		guideButton = addRenderableWidget(Button.builder(Component.empty(), b -> guide()).bounds(x, y, w, BUTTON).build());
-		copyButton = addRenderableWidget(Button.builder(Component.literal("Copiar XYZ"), b -> {
+		copyButton = addRenderableWidget(Button.builder(Component.literal(Tr.t("Copiar XYZ")), b -> {
 			BlockPos p = selected.pos();
 			minecraft.keyboardHandler.setClipboard(p.getX() + " " + p.getY() + " " + p.getZ());
-			b.setMessage(Component.literal("Copiadas"));
+			b.setMessage(Component.literal(Tr.t("Copiadas")));
 		}).bounds(x, y, w, BUTTON).build());
-		placeButton = addRenderableWidget(Button.builder(Component.literal("Colocar build"), b -> {
+		placeButton = addRenderableWidget(Button.builder(Component.literal(Tr.t("Colocar build")), b -> {
 			minecraft.setScreen(null);
 			BuildPlacer.start(minecraft, selected);
 		}).bounds(x, y, w, BUTTON).build());
@@ -92,7 +92,7 @@ public final class GalleryScreen extends Screen {
 			else Materials.start(minecraft, selected);
 			minecraft.setScreen(null);
 		}).bounds(x, y, w, BUTTON).build());
-		undoButton = addRenderableWidget(Button.builder(Component.literal("Deshacer"), b -> {
+		undoButton = addRenderableWidget(Button.builder(Component.literal(Tr.t("Deshacer")), b -> {
 			minecraft.setScreen(null);
 			BuildPlacer.undo(minecraft);
 		}).bounds(x, y, w, BUTTON).build());
@@ -109,7 +109,7 @@ public final class GalleryScreen extends Screen {
 	}
 
 	private void filter() {
-		filterButton.setMessage(Component.literal(onlyThisWorld ? "Solo este mundo" : "Todos los mundos"));
+		filterButton.setMessage(Component.literal(onlyThisWorld ? Tr.t("Solo este mundo") : Tr.t("Todos los mundos")));
 		shown = !onlyThisWorld ? all : all.stream().filter(c -> c.world().equals(world)).toList();
 		if (selected != null && !shown.contains(selected)) selected = null;
 		scroll = Math.max(0, Math.min(scroll, maxScroll()));
@@ -122,28 +122,28 @@ public final class GalleryScreen extends Screen {
 		details = capture == null ? List.of() : describe(capture);
 
 		boolean guided = Guide.isFor(capture) || (capture == null && Guide.isActive());
-		guideButton.setMessage(Component.literal(guided ? "Quitar guía" : "Guiarme"));
+		guideButton.setMessage(Component.literal(guided ? Tr.t("Quitar guía") : Tr.t("Guiarme")));
 		String blocked = guided ? null
-			: capture == null ? "Elige una captura"
-			: capture.pos() == null ? "Esta captura no tiene coordenadas"
-			: !capture.world().isEmpty() && !capture.world().equals(world) ? "Esta captura es de otro mundo (" + capture.world() + ")"
+			: capture == null ? Tr.t("Elige una captura")
+			: capture.pos() == null ? Tr.t("Esta captura no tiene coordenadas")
+			: !capture.world().isEmpty() && !capture.world().equals(world) ? Tr.t("Esta captura es de otro mundo (") + capture.world() + ")"
 			: null;
 		guideButton.active = blocked == null;
 		guideButton.setTooltip(Tooltip.create(Component.literal(blocked != null ? blocked
-			: guided ? "Deja de señalar el lugar de la captura" : "Una flecha te lleva al lugar de esta captura")));
+			: guided ? Tr.t("Deja de señalar el lugar de la captura") : Tr.t("Una flecha te lleva al lugar de esta captura"))));
 
 		copyButton.visible = capture != null && capture.pos() != null;
-		copyButton.setMessage(Component.literal("Copiar XYZ"));
-		copyButton.setTooltip(Tooltip.create(Component.literal("Copia las coordenadas de la captura al portapapeles")));
+		copyButton.setMessage(Component.literal(Tr.t("Copiar XYZ")));
+		copyButton.setTooltip(Tooltip.create(Component.literal(Tr.t("Copia las coordenadas de la captura al portapapeles"))));
 		placeButton.visible = capture != null && capture.build() != null;
 		placeButton.active = minecraft.hasSingleplayerServer();
-		placeButton.setTooltip(Tooltip.create(Component.literal(placeButton.active ? "Coloca el build guardado con esta captura" : "Solo en mundos de un jugador")));
+		placeButton.setTooltip(Tooltip.create(Component.literal(placeButton.active ? Tr.t("Coloca el build guardado con esta captura") : Tr.t("Solo en mundos de un jugador"))));
 		boolean pinned = Materials.isFor(capture);
 		materialsButton.visible = capture != null && capture.build() != null;
-		materialsButton.setMessage(Component.literal(pinned ? "Quitar lista" : "Materiales"));
-		materialsButton.setTooltip(Tooltip.create(Component.literal(pinned ? "Quita la lista de materiales de la pantalla"
-			: "Fija en pantalla lo que necesita este build y lo va tachando con tu inventario")));
-		undoButton.setTooltip(Tooltip.create(Component.literal("Deshace la última colocación de un build")));
+		materialsButton.setMessage(Component.literal(pinned ? Tr.t("Quitar lista") : Tr.t("Materiales")));
+		materialsButton.setTooltip(Tooltip.create(Component.literal(pinned ? Tr.t("Quita la lista de materiales de la pantalla")
+			: Tr.t("Fija en pantalla lo que necesita este build y lo va tachando con tu inventario"))));
+		undoButton.setTooltip(Tooltip.create(Component.literal(Tr.t("Deshace la última colocación de un build"))));
 		undoButton.visible = BuildPlacer.canUndo(minecraft);
 
 		// Two per row at the bottom of the panel (a lone one takes the row); the details take the rest.
@@ -174,7 +174,7 @@ public final class GalleryScreen extends Screen {
 		int max = panelWidth - 20;
 		add(out, Component.literal(c.name()), WHITE, max);
 		add(out, Component.literal(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(c.time()))), MUTED, max);
-		if (c.favorite()) add(out, Component.literal("★ Favorita"), 0xFFFFD24A, max);
+		if (c.favorite()) add(out, Component.literal(Tr.t("★ Favorita")), 0xFFFFD24A, max);
 		if (!c.tags().isEmpty()) add(out, Component.literal("#" + String.join(" #", c.tags())), 0xFF4FC3F7, max);
 		if (!c.note().isEmpty()) add(out, Component.literal(c.note()), 0xFFFFE066, max);
 
@@ -182,7 +182,7 @@ public final class GalleryScreen extends Screen {
 		if (p != null && minecraft.player != null && c.world().equals(world)
 				&& (c.dimension() == null || c.dimension().equals(minecraft.level.dimension().location().toString()))) {
 			int distance = (int) Math.round(Math.sqrt(minecraft.player.distanceToSqr(p.getX() + 0.5, p.getY(), p.getZ() + 0.5)));
-			add(out, Component.literal("A " + distance + " bloques de ti"), ACCENT, max);
+			add(out, Component.literal(Tr.t("A ") + distance + Tr.t(" bloques de ti")), ACCENT, max);
 		}
 		for (CaptureIndex.Section section : c.sections()) {
 			out.add(new Line(FormattedCharSequence.EMPTY, 0));
@@ -195,7 +195,7 @@ public final class GalleryScreen extends Screen {
 		}
 		if (c.sections().isEmpty()) {
 			out.add(new Line(FormattedCharSequence.EMPTY, 0));
-			add(out, Component.literal("Sin datos: no se hizo con el mod y la app aún no la ha analizado."), MUTED, max);
+			add(out, Component.literal(Tr.t("Sin datos: no se hizo con el mod y la app aún no la ha analizado.")), MUTED, max);
 		}
 		return out;
 	}
@@ -225,7 +225,7 @@ public final class GalleryScreen extends Screen {
 		// The background first: the game's own render would draw it over the gallery.
 		renderBackground(raw);
 		GuiGraphicsExtractor g = new GuiGraphicsExtractor(raw);
-		String count = loading ? "Cargando…" : shown.size() + (shown.size() == 1 ? " captura" : " capturas");
+		String count = loading ? Tr.t("Cargando…") : shown.size() + (shown.size() == 1 ? Tr.t(" captura") : Tr.t(" capturas"));
 		g.text(font, "F2+F3", MARGIN, 11, ACCENT);
 		g.text(font, "· " + count, MARGIN + font.width("F2+F3 "), 11, WHITE);
 
@@ -243,7 +243,7 @@ public final class GalleryScreen extends Screen {
 
 			int badge = x + cellWidth - 2;
 			if (c.build() != null) badge = badge(g, "BUILD", badge, y + 2, 0xFFFF9F43);
-			if (Guide.isFor(c)) badge = badge(g, "GUÍA", badge, y + 2, 0xFFFFD24A);
+			if (Guide.isFor(c)) badge = badge(g, Tr.t("GUÍA"), badge, y + 2, 0xFFFFD24A);
 			if (c.favorite()) badge(g, "★", badge, y + 2, 0xFFFFD24A);
 
 			BlockPos p = c.pos();
@@ -252,7 +252,7 @@ public final class GalleryScreen extends Screen {
 		}
 		g.disableScissor();
 		if (!loading && shown.isEmpty()) {
-			g.centeredText(font, onlyThisWorld ? "No hay capturas de este mundo" : "No hay capturas", MARGIN + gridWidth / 2, TOP + 30, MUTED);
+			g.centeredText(font, onlyThisWorld ? Tr.t("No hay capturas de este mundo") : Tr.t("No hay capturas"), MARGIN + gridWidth / 2, TOP + 30, MUTED);
 		}
 		if (maxScroll() > 0) {
 			int track = bottom - TOP;
@@ -264,7 +264,7 @@ public final class GalleryScreen extends Screen {
 		g.fill(panelX, TOP - 2, panelX + panelWidth, bottom, 0xB0101010);
 		if (selected == null) {
 			detailTop = TOP + 6;
-			g.centeredText(font, "Elige una captura", panelX + panelWidth / 2, TOP + 30, MUTED);
+			g.centeredText(font, Tr.t("Elige una captura"), panelX + panelWidth / 2, TOP + 30, MUTED);
 		} else {
 			// A small picture: the panel is for the data.
 			int w = (panelWidth - 8) * 3 / 5, h = w * 9 / 16, x = panelX + (panelWidth - w) / 2;

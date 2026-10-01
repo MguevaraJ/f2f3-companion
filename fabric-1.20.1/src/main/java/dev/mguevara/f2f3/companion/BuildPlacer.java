@@ -67,7 +67,7 @@ public final class BuildPlacer {
 				loaded.load(BuiltInRegistries.BLOCK.asLookup(), NbtIo.readCompressed(capture.build().file().toFile()));
 			} catch (Exception e) {
 				F2F3Companion.LOG.warn("Could not read {}", capture.build().file(), e);
-				mc.execute(() -> message(mc, "No se pudo leer el build de esa captura"));
+				mc.execute(() -> message(mc, Tr.t("No se pudo leer el build de esa captura")));
 				return;
 			}
 			mc.execute(() -> {
@@ -95,7 +95,7 @@ public final class BuildPlacer {
 	public static boolean onEscape(Minecraft mc) {
 		if (!active || mc.screen != null) return false;
 		cancel();
-		message(mc, "Colocación cancelada");
+		message(mc, Tr.t("Colocación cancelada"));
 		return true;
 	}
 
@@ -104,7 +104,7 @@ public final class BuildPlacer {
 		if (!active || mc.screen != null) return false;
 		IntegratedServer server = mc.getSingleplayerServer();
 		if (min == null || server == null || mc.level == null) {
-			message(mc, "Apunta al bloque donde irá la esquina del build");
+			message(mc, Tr.t("Apunta al bloque donde irá la esquina del build"));
 			return true;
 		}
 		StructureTemplate placing = template;
@@ -121,7 +121,7 @@ public final class BuildPlacer {
 			placing.placeInWorld(level, at, at, new StructurePlaceSettings().setRotation(turn), level.getRandom(), 2);
 			mc.execute(() -> {
 				undo = new Undo(dimension, corner, before);
-				message(mc, "Build colocado · se puede deshacer desde la galería");
+				message(mc, Tr.t("Build colocado · se puede deshacer desde la galería"));
 			});
 		});
 		return true;
@@ -137,7 +137,7 @@ public final class BuildPlacer {
 			ServerLevel level = server.getLevel(last.dimension());
 			if (level == null) return;
 			last.before().placeInWorld(level, last.min(), last.min(), new StructurePlaceSettings(), level.getRandom(), 2);
-			mc.execute(() -> message(mc, "Colocación deshecha"));
+			mc.execute(() -> message(mc, Tr.t("Colocación deshecha")));
 		});
 	}
 
@@ -194,11 +194,11 @@ public final class BuildPlacer {
 	public static void drawHud(GuiGraphicsExtractor g) {
 		Minecraft mc = Minecraft.getInstance();
 		if (!active || mc.screen != null) return;
-		String status = min == null ? "Colocar " + name + ": apunta al bloque de la esquina"
-			: "Colocar " + name + " · " + size.getX() + "×" + size.getY() + "×" + size.getZ()
-				+ " · hacia el " + CaptureIndex.facingName(mc.player.getDirection().getName()).toLowerCase();
-		String height = lift == 0 ? "a ras" : (lift > 0 ? "+" : "") + lift;
-		BuildPreview.drawLines(g, status, "Enter coloca · Rueda agachado: sube o baja (" + height + ") · gírate para rotarlo · Esc cancela");
+		String status = min == null ? Tr.t("Colocar ") + name + Tr.t(": apunta al bloque de la esquina")
+			: Tr.t("Colocar ") + name + " · " + size.getX() + "×" + size.getY() + "×" + size.getZ()
+				+ Tr.t(" · hacia el ") + CaptureIndex.facingName(mc.player.getDirection().getName()).toLowerCase();
+		String height = lift == 0 ? Tr.t("a ras") : (lift > 0 ? "+" : "") + lift;
+		BuildPreview.drawLines(g, status, Tr.t("Enter coloca · Rueda agachado: sube o baja (") + height + Tr.t(") · gírate para rotarlo · Esc cancela"));
 	}
 
 	private static int index(Direction d) {

@@ -24,7 +24,7 @@ public final class BuildNameScreen extends Screen {
 	private boolean done;
 
 	public BuildNameScreen(String size, Consumer<String> onSave, Runnable onBack) {
-		super(Component.literal("Nombre del build"));
+		super(Component.literal(Tr.t("Nombre del build")));
 		this.size = size;
 		this.onSave = onSave;
 		this.onBack = onBack;
@@ -41,12 +41,12 @@ public final class BuildNameScreen extends Screen {
 	protected void init() {
 		int x = (width - WIDTH) / 2;
 		int y = height / 2 - 20;
-		name = new EditBox(font, x, y, WIDTH, 20, Component.literal("Nombre"));
+		name = new EditBox(font, x, y, WIDTH, 20, Component.literal(Tr.t("Nombre")));
 		name.setMaxLength(64);
-		name.setHint(Component.literal("Vacío = build_1, build_2…"));
+		name.setHint(Component.literal(Tr.t("Vacío = build_1, build_2…")));
 		addRenderableWidget(name);
-		addRenderableWidget(Button.builder(Component.literal("Guardar"), b -> save()).bounds(x, y + 28, WIDTH / 2 - 2, 20).build());
-		addRenderableWidget(Button.builder(Component.literal("Volver"), b -> onClose()).bounds(x + WIDTH / 2 + 2, y + 28, WIDTH / 2 - 2, 20).build());
+		addRenderableWidget(Button.builder(Component.literal(Tr.t("Guardar")), b -> save()).bounds(x, y + 28, WIDTH / 2 - 2, 20).build());
+		addRenderableWidget(Button.builder(Component.literal(Tr.t("Volver")), b -> onClose()).bounds(x + WIDTH / 2 + 2, y + 28, WIDTH / 2 - 2, 20).build());
 		setInitialFocus(name);
 	}
 
@@ -55,9 +55,9 @@ public final class BuildNameScreen extends Screen {
 		super.render(raw, mouseX, mouseY, partial);
 		GuiGraphicsExtractor g = new GuiGraphicsExtractor(raw);
 		int y = height / 2 - 20;
-		g.centeredText(font, "Nombre del build (" + size + ")", width / 2, y - 26, 0xFFFFFFFF);
+		g.centeredText(font, Tr.t("Nombre del build (") + size + ")", width / 2, y - 26, 0xFFFFFFFF);
 		String preview = slug(name.getValue());
-		g.centeredText(font, "Se guardará como f2f3:" + (preview.isEmpty() ? "build_N" : preview), width / 2, y - 13, 0xFFA0A0A0);
+		g.centeredText(font, Tr.t("Se guardará como f2f3:") + (preview.isEmpty() ? "build_N" : preview), width / 2, y - 13, 0xFFA0A0A0);
 	}
 
 	/** No blur: the box must stay visible behind; a dark panel keeps the text readable. */

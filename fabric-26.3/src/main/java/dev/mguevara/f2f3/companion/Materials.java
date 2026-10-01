@@ -85,12 +85,12 @@ public final class Materials {
 				needed = count(NbtIo.readCompressed(c.build().file(), NbtAccounter.unlimitedHeap()));
 			} catch (Exception e) {
 				F2F3Companion.LOG.warn("Could not read {}", c.build().file(), e);
-				mc.execute(() -> message(mc, "No se pudo leer el build de esa captura"));
+				mc.execute(() -> message(mc, Tr.t("No se pudo leer el build de esa captura")));
 				return;
 			}
 			mc.execute(() -> {
 				if (needed.isEmpty()) {
-					message(mc, "Ese build no necesita materiales");
+					message(mc, Tr.t("Ese build no necesita materiales"));
 					return;
 				}
 				List<Row> list = new ArrayList<>();
@@ -102,7 +102,7 @@ public final class Materials {
 				complete = false;
 				recount(mc);
 				String key = CompanionConfig.get().materialsKey().toUpperCase();
-				message(mc, "Lista de materiales fijada (" + key + " la oculta)");
+				message(mc, Tr.t("Lista de materiales fijada (") + key + Tr.t(" la oculta)"));
 			});
 		});
 	}
@@ -137,7 +137,7 @@ public final class Materials {
 	public static boolean toggle(Minecraft mc) {
 		if (capture == null) return false;
 		hidden = !hidden;
-		message(mc, hidden ? "Lista de materiales oculta" : "Lista de materiales visible");
+		message(mc, hidden ? Tr.t("Lista de materiales oculta") : Tr.t("Lista de materiales visible"));
 		return true;
 	}
 
@@ -163,7 +163,7 @@ public final class Materials {
 		// Stable: the build's order within each group.
 		order.sort(Comparator.comparing(Row::done));
 		sorted = order;
-		if (all && !complete) message(mc, "Ya llevas todos los materiales de " + capture.name());
+		if (all && !complete) message(mc, Tr.t("Ya llevas todos los materiales de ") + capture.name());
 		complete = all;
 	}
 
@@ -180,7 +180,7 @@ public final class Materials {
 		int more = sorted.size() - shown;
 		int done = 0;
 		for (Row row : rows) if (row.done()) done++;
-		String title = complete ? "✔ Materiales listos" : "Materiales " + done + "/" + rows.size();
+		String title = complete ? Tr.t("✔ Materiales listos") : Tr.t("Materiales ") + done + "/" + rows.size();
 		String name = font.plainSubstrByWidth(capture.name(), 150);
 
 		int width = Math.max(font.width(title), font.width(name));
@@ -212,7 +212,7 @@ public final class Materials {
 			g.text(font, counts[i], right - font.width(counts[i]), top + 4, color);
 			top += ROW;
 		}
-		if (more > 0) g.text(font, "+" + more + " más", left, top + 1, MUTED);
+		if (more > 0) g.text(font, "+" + more + Tr.t(" más"), left, top + 1, MUTED);
 		g.pose().popMatrix();
 	}
 }

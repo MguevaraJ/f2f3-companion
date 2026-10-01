@@ -2,15 +2,24 @@
 
 Mod de Fabric (solo cliente) para Minecraft que acompaña a la app de escritorio **F2+F3** (repo aparte, en
 `../f2f3`, github.com/MguevaraJ/f2f3): guarda junto a cada captura (F2) los datos exactos del juego y lleva la app dentro del juego (galería,
-guía, builds, planes del mapa, lista de materiales). **Textos del juego en español. Código y comentarios en inglés.**
+guía, builds, planes del mapa, lista de materiales). **Los textos se escriben en español dentro de `Tr.t("…")`; el inglés
+es el diccionario de `Tr.java`. Código y comentarios en inglés.**
 
 Tres proyectos Gradle independientes con el mismo código: `fabric-26.3/` (el original), `fabric-1.21.1/` y
 `fabric-1.20.1/` (ports). **Un cambio hay que repetirlo en los tres.** Cada uno tiene su cliente de prueba en `run/`
 (ignorado por git).
 
+## Idiomas
+`Tr.t("Texto en español")` devuelve el texto según el idioma del juego (`options.languageCode`): español si empieza por
+`es`, inglés en cualquier otro caso. El inglés es el mapa `EN` de `Tr.java`, con el texto en español como clave; sin
+entrada, se queda en español. Las frases se montan por trozos (`Tr.t("Punto AFK a ") + n + Tr.t(" bloques")`), así que
+cada trozo es una clave. Texto nuevo: envolverlo y añadir su entrada **en los tres proyectos** (`Tr.java` es idéntico
+en los tres). Las fichas que llegan de la app (`app-index.json`) vienen ya en el idioma de la app. Probado en juego en
+inglés solo en 26.3 (HUD de builds y galería).
+
 ## Comandos
 ```bash
-cd fabric-26.3 && ./gradlew build -q        # jar en build/libs/f2f3-companion-1.0.0+<versión>.jar
+cd fabric-26.3 && ./gradlew build -q        # jar en build/libs/f2f3-companion-1.0.1+<versión>.jar
 ./gradlew runClient --args='--quickPlaySingleplayer "New World (1)"'    # 26.3; en los ports el mundo es "Mundo nuevo"
 ```
 La app incluye los jars: desde `../f2f3`, `npm run build:mod` compila los tres y los copia a su `resources/`

@@ -191,14 +191,14 @@ public final class Plans {
 		refresh(mc);
 		String message;
 		if (mc.player.isShiftKeyDown()) {
-			if (seed(mc) == null) message = "Sin semilla: escríbela en el mapa de la app y envía un plan";
-			else if (!dimension(mc).equals(OVERWORLD)) message = "Los chunks slime solo están en el Overworld";
-			else message = (showSlime = !showSlime) ? "Chunks slime visibles" : "Chunks slime ocultos";
+			if (seed(mc) == null) message = Tr.t("Sin semilla: escríbela en el mapa de la app y envía un plan");
+			else if (!dimension(mc).equals(OVERWORLD)) message = Tr.t("Los chunks slime solo están en el Overworld");
+			else message = (showSlime = !showSlime) ? Tr.t("Chunks slime visibles") : Tr.t("Chunks slime ocultos");
 		} else {
 			World w = current(mc);
 			if (w == null || (w.afk() == null && w.portals() == null)) {
-				message = "No hay planes de la app para «" + worldName(mc) + "»";
-			} else message = (showPlans = !showPlans) ? "Planes visibles" : "Planes ocultos";
+				message = Tr.t("No hay planes de la app para «") + worldName(mc) + "»";
+			} else message = (showPlans = !showPlans) ? Tr.t("Planes visibles") : Tr.t("Planes ocultos");
 		}
 		mc.player.displayClientMessage(Component.literal(message), true);
 		return true;
@@ -259,7 +259,7 @@ public final class Plans {
 			if (p.b() != null) portal(p.b(), "B", PORTAL_B);
 			else {
 				Gizmos.point(Vec3.atCenterOf(exit), PORTAL_A, 9f).setAlwaysOnTop();
-				label("Destino ideal de A", Vec3.atCenterOf(exit).add(0, 1.1, 0), PORTAL_A);
+				label(Tr.t("Destino ideal de A"), Vec3.atCenterOf(exit).add(0, 1.1, 0), PORTAL_A);
 			}
 		}
 	}
@@ -370,13 +370,13 @@ public final class Plans {
 		if (showPlans && w != null && w.afk() != null && w.afk().dimension().equals(dim)) {
 			BlockPos spot = w.afk().spot();
 			double d = Math.sqrt(mc.player.distanceToSqr(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5));
-			lines.add(d < 1.5 ? "En el punto AFK" : "Punto AFK a " + Math.round(d) + " bloques");
+			lines.add(d < 1.5 ? Tr.t("En el punto AFK") : Tr.t("Punto AFK a ") + Math.round(d) + Tr.t(" bloques"));
 			colors.add(d < 1.5 ? 0xFF6EE08A : WHITE);
 		}
 		Long seed = seed(mc);
 		if (showSlime && seed != null && dim.equals(OVERWORLD)) {
 			boolean here = isSlimeChunk(seed, mc.player.getBlockX() >> 4, mc.player.getBlockZ() >> 4);
-			lines.add(here ? "Chunk slime" : "Sin slimes en este chunk");
+			lines.add(here ? Tr.t("Chunk slime") : Tr.t("Sin slimes en este chunk"));
 			colors.add(here ? SLIME : 0xFFAAAAAA);
 		}
 		if (lines.isEmpty()) return;

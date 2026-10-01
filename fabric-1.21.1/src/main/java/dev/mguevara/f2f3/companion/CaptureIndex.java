@@ -115,33 +115,33 @@ public final class CaptureIndex {
 		JsonObject light = obj(side, "light");
 
 		List<String[]> where = new ArrayList<>();
-		row(where, "Mundo", str(world, "name", null));
-		row(where, "Dimensión", dimensionName(str(world, "dimension", null)));
-		if (block != null) row(where, "Coordenadas", num(block, "x") + " " + num(block, "y") + " " + num(block, "z"));
-		row(where, "Mirando al", facingName(str(obj(player, "facing"), "direction", null)));
-		row(where, "Bioma", translated("biome", str(side, "biome", null)));
-		if (light != null) row(where, "Luz", "cielo " + num(light, "sky") + " · bloque " + num(light, "block"));
-		if (!where.isEmpty()) out.add(new Section("Ubicación", where));
+		row(where, Tr.t("Mundo"), str(world, "name", null));
+		row(where, Tr.t("Dimensión"), dimensionName(str(world, "dimension", null)));
+		if (block != null) row(where, Tr.t("Coordenadas"), num(block, "x") + " " + num(block, "y") + " " + num(block, "z"));
+		row(where, Tr.t("Mirando al"), facingName(str(obj(player, "facing"), "direction", null)));
+		row(where, Tr.t("Bioma"), translated("biome", str(side, "biome", null)));
+		if (light != null) row(where, Tr.t("Luz"), Tr.t("cielo ") + num(light, "sky") + Tr.t(" · bloque ") + num(light, "block"));
+		if (!where.isEmpty()) out.add(new Section(Tr.t("Ubicación"), where));
 
 		List<String[]> game = new ArrayList<>();
-		if (world != null && world.has("day")) row(game, "Día", (num(world, "day") + 1) + " · " + clock(num(world, "timeOfDay")));
-		row(game, "Clima", switch (str(world, "weather", "")) {
-			case "clear" -> "Despejado";
-			case "rain" -> "Lluvia";
-			case "thunder" -> "Tormenta";
+		if (world != null && world.has("day")) row(game, Tr.t("Día"), (num(world, "day") + 1) + " · " + clock(num(world, "timeOfDay")));
+		row(game, Tr.t("Clima"), switch (str(world, "weather", "")) {
+			case "clear" -> Tr.t("Despejado");
+			case "rain" -> Tr.t("Lluvia");
+			case "thunder" -> Tr.t("Tormenta");
 			default -> null;
 		});
-		row(game, "Modo", translatedKey("gameMode." + str(player, "gameMode", ""), str(player, "gameMode", null)));
-		row(game, "Semilla", str(world, "seed", null));
-		if (!game.isEmpty()) out.add(new Section("Partida", game));
+		row(game, Tr.t("Modo"), translatedKey("gameMode." + str(player, "gameMode", ""), str(player, "gameMode", null)));
+		row(game, Tr.t("Semilla"), str(world, "seed", null));
+		if (!game.isEmpty()) out.add(new Section(Tr.t("Partida"), game));
 
 		JsonObject target = obj(obj(side, "target"), "block");
 		if (target != null) {
 			List<String[]> aim = new ArrayList<>();
-			row(aim, "Bloque", translated("block", str(target, "id", null)));
+			row(aim, Tr.t("Bloque"), translated("block", str(target, "id", null)));
 			JsonObject p = obj(target, "pos");
-			if (p != null) row(aim, "Posición", num(p, "x") + " " + num(p, "y") + " " + num(p, "z"));
-			out.add(new Section("Apuntando a", aim));
+			if (p != null) row(aim, Tr.t("Posición"), num(p, "x") + " " + num(p, "y") + " " + num(p, "z"));
+			out.add(new Section(Tr.t("Apuntando a"), aim));
 		}
 
 		if (side.has("entities") && side.get("entities").isJsonArray() && !side.getAsJsonArray("entities").isEmpty()) {
@@ -157,13 +157,13 @@ public final class CaptureIndex {
 		if (structures != null && structures.has("inside") && !structures.getAsJsonArray("inside").isEmpty()) {
 			List<String[]> rows = new ArrayList<>();
 			for (JsonElement e : structures.getAsJsonArray("inside")) row(rows, pretty(e.getAsString()), "Mod");
-			out.add(new Section("Estructuras", rows));
+			out.add(new Section(Tr.t("Estructuras"), rows));
 		}
 
 		if (build != null) {
 			List<String[]> rows = new ArrayList<>();
-			row(rows, "Tamaño", build.size());
-			row(rows, "Bloques", String.valueOf(build.blocks()));
+			row(rows, Tr.t("Tamaño"), build.size());
+			row(rows, Tr.t("Bloques"), String.valueOf(build.blocks()));
 			out.add(new Section("Build", rows));
 		}
 		return out;
@@ -186,10 +186,10 @@ public final class CaptureIndex {
 	public static String facingName(String facing) {
 		if (facing == null) return null;
 		return switch (facing) {
-			case "north" -> "Norte";
-			case "south" -> "Sur";
-			case "east" -> "Este";
-			case "west" -> "Oeste";
+			case "north" -> Tr.t("Norte");
+			case "south" -> Tr.t("Sur");
+			case "east" -> Tr.t("Este");
+			case "west" -> Tr.t("Oeste");
 			default -> facing;
 		};
 	}
