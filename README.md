@@ -1,6 +1,6 @@
 # F2+F3 Companion
 
-Mod de Fabric (solo cliente) para Minecraft que acompaña a **F2+F3**, un gestor de capturas de pantalla de
+Mod de Fabric (solo cliente) para Minecraft que acompaña a **[F2+F3](https://github.com/MguevaraJ/f2f3)**, un gestor de capturas de pantalla de
 Minecraft. Cada vez que haces una captura (F2), el mod guarda junto a ella los datos exactos del juego, y además lleva
 parte de la app dentro del juego.
 

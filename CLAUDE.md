@@ -1,7 +1,7 @@
 # F2+F3 Companion — contexto para agentes
 
 Mod de Fabric (solo cliente) para Minecraft que acompaña a la app de escritorio **F2+F3** (repo aparte, en
-`../craftshot`): guarda junto a cada captura (F2) los datos exactos del juego y lleva la app dentro del juego (galería,
+`../craftshot`, github.com/MguevaraJ/f2f3): guarda junto a cada captura (F2) los datos exactos del juego y lleva la app dentro del juego (galería,
 guía, builds, planes del mapa, lista de materiales). **Textos del juego en español. Código y comentarios en inglés.**
 
 Tres proyectos Gradle independientes con el mismo código: `fabric-26.3/` (el original), `fabric-1.21.1/` y
